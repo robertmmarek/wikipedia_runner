@@ -1,7 +1,7 @@
 import React from 'react';
 import getlorem from 'getlorem';
 
-class LoremIpsum extends React.Component
+export default class LoremIpsum extends React.Component
 {
     constructor(props)
     {
@@ -12,12 +12,17 @@ class LoremIpsum extends React.Component
     {
         return(
             <div>
-                {getlorem.words(this.props.words)}
+                {this.props.words>0?getlorem.words(this.props.words):this.props.text}
             </div>
         );
     }
 }
 
-LoremIpsum.defaultProps = {words: 2};
+export function generateNWords(n)
+{
+    return getlorem.words(n);
+}
 
-export default LoremIpsum;
+LoremIpsum.defaultProps = {words: 0, text: ''};
+
+

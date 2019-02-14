@@ -1,32 +1,28 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import '../styles/App.css';
 import LoremIpsum from './LoremIpsum.js';
+import {generateNWords} from './LoremIpsum';
+import StartGamePanel from './StartGamePanel';
+import RulesExplanation from './RulesExplanation';
+import Timer from './Timer';
 import {BrowserRouter as Router,
         Route,
         Link} from 'react-router-dom';
 
-
-const Home = () =>
-(
-        <div>
-            <h2>HOME</h2>
-        </div>
-)
-
-const About = () =>
-{
-    return(
-        <div>
-            <h2>ABOUT</h2>
-        </div>
-    );
-}
-
+let AppStateEnum = {idle: 0, game_start: 1, load: 2, playing: 3, game_finish: 4, save_score: 5};
+Object.freeze(AppStateEnum);
 
 class App extends React.Component{
     constructor(props)
     {
+        window.appLanguage = props.language;
         super(props);
+        this.loremIpsums = {small: generateNWords(500), medium: generateNWords(5000), big: generateNWords(50000)};
+        this.state = {
+            gameState: AppStateEnum.idle,
+            timePassed: 0.0
+        };
     }
 
     render(){
@@ -34,35 +30,45 @@ class App extends React.Component{
             <div>
                 <div className={"container"}>
                     <div className={"row justify-content-center mt-md-1 mt-lg-1 mt-sm-0"}>
-                        <div className={"col-sm-12 col-md-12 col-lg-9 py-y card no-y-margin rounded-pill bg-dark shadow text-light"}>
-                            HEJ
+                        <div className={"col-sm-12 col-md-12 col-lg-9 py-3 card no-y-margin rounded-pill bg-dark shadow text-light"}>
+                                {this.state.gameState === AppStateEnum.idle?
+                                <StartGamePanel key="start-game-panel" onConfirm={()=>this.setState({gameState: AppStateEnum.game_start})}/>
+                                :[]}
+
+                                {[AppStateEnum.game_start, AppStateEnum.load, AppStateEnum.playing].includes(this.state.gameState)?
+                                <Timer run={true} onTick={(seconds)=>this.setState({timePassed: seconds})}/>
+                                :[]}
                         </div>
                     </div>
                     <div className={"row justify-content-center"}>
-                        <div className={"col-sm-12 col-md-12 col-lg-9 py-2 card minimal-y-margin rounded-pill shadow"}>
-                            HEJ
+                        <div className={"col-sm-12 col-md-12 col-lg-9 py-3 card minimal-y-margin shadow"}>
+                                {this.state.gameState === AppStateEnum.idle?
+                                <RulesExplanation key="rules-explanation"/>
+                                :[]}
                         </div>
                     </div>
                 </div>
 
-                <div className={"background-layer text-justify font-italic text-muted d-none d-sm-none"}>
-                    <LoremIpsum words={500} />
+                <div className={"background-layer text-justify font-italic font-weight-light text-muted d-none d-sm-none"}>
+                    <LoremIpsum text={this.loremIpsums.small} />
                 </div>
 
-                <div className={"background-layer text-justify font-italic text-muted d-none d-md-block d-lg-none"}>
-                    <LoremIpsum words={5000} />
+                <div className={"background-layer text-justify font-italic font-weight-light text-muted d-none d-md-block d-lg-none"}>
+                    <LoremIpsum text={this.loremIpsums.medium} />
                 </div>
 
-                <div className={"background-layer text-justify font-italic text-muted d-none d-lg-block d-xl-none"}>
-                    <LoremIpsum words={20000} />
+                <div className={"background-layer text-justify font-italic font-weight-light text-muted d-none d-lg-block d-xl-none"}>
+                    <LoremIpsum text={this.loremIpsums.big} />
                 </div>
 
-                <div className={"background-layer text-justify font-italic text-muted d-none d-xl-block"}>
-                    <LoremIpsum words={30000} />
+                <div className={"background-layer text-justify font-italic font-weight-light text-muted d-none d-xl-block"}>
+                    <LoremIpsum text={this.loremIpsums.big} />
                 </div>
             </div>
         );
     }
 }
+
+App.defaultProps = {language: 'en'};
 
 export default App;
