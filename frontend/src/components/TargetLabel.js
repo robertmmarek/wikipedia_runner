@@ -10,9 +10,14 @@ class TargetLabel extends React.Component
     render()
     {
         return(
-            <div></div>
+            <div className={this.props.className}>
+                <h3>Target article:</h3>
+                <h2>AAAAAAAAAAAAA</h2>
+            </div>
         );
     }
 }
+
+TargetLabel.defaultProps = {className: ""}
 
 export default TargetLabel;

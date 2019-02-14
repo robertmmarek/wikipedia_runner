@@ -6,6 +6,7 @@ import {generateNWords} from './LoremIpsum';
 import StartGamePanel from './StartGamePanel';
 import RulesExplanation from './RulesExplanation';
 import Timer from './Timer';
+import TargetLabel from './TargetLabel';
 import {BrowserRouter as Router,
         Route,
         Link} from 'react-router-dom';
@@ -36,7 +37,15 @@ class App extends React.Component{
                                 :[]}
 
                                 {[AppStateEnum.game_start, AppStateEnum.load, AppStateEnum.playing].includes(this.state.gameState)?
-                                <Timer run={true} onTick={(seconds)=>this.setState({timePassed: seconds})}/>
+                                <div className="container">
+                                    <div className="row align-items-center">
+                                        <TargetLabel className="col-lg-6 col-md-6 col-sm-12 text-center"/>
+                                        <Timer run={true} 
+                                               onTick={(seconds)=>this.setState({timePassed: seconds})} 
+                                               increment={0.1} 
+                                               className="col-lg-6 col-md-6 col-sm-12 text-center"/>
+                                    </div>
+                                </div>
                                 :[]}
                         </div>
                     </div>
