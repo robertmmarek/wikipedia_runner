@@ -43,7 +43,9 @@ function formatTime(seconds)
 {
     let out = "";
 
-    let displaySeconds = Math.floor(seconds).toFixed(0) % 60;
+    let fractionSeconds = seconds - Math.floor(seconds);
+    let displaySeconds = Math.floor(seconds) % 60;
+    displaySeconds = (displaySeconds + fractionSeconds).toFixed(1);
     let minutes = Math.floor(seconds/60).toFixed(0) % 60;
     let hours = Math.floor(seconds/3600).toFixed(0);
 
