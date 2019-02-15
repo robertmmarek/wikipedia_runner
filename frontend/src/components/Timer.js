@@ -5,21 +5,30 @@ class Timer extends React.Component
     constructor(props)
     {
         super(props);
-        this.state = {running: props.run, passed_time: props.initialTime};
+        this.state = {passed_time: props.initialTime};
     }
 
     componentDidMount()
     {
         this.timerID = setInterval(()=>{
-            if(this.state.running)
+            if(this.props.run)
             {
                 this.setState((state, props)=>{
                     let newTime = state.passed_time+props.increment;
-                    let callbackPromise = new Promise((resolve)=>{this.props.onTick(newTime)});
+                    let parentUpdatePromise = new Promise((resolve)=>{props.onTick(newTime); resolve(newTime)});
                     return {passed_time: newTime};
                 });
             }
         }, this.props.increment*1000);
+    }
+
+    componentDidUpdate(prevProps)
+    {
+        if (this.props.reset != prevProps.reset && this.props.reset)
+        {
+            this.props.onTick(this.props.initialTime);
+            this.setState({passed_time: this.props.initialTime});
+        }
     }
 
     componentWillUnmount()
@@ -52,6 +61,6 @@ function formatTime(seconds)
     return hours.toString() + "h " + minutes.toString() + "m " + displaySeconds.toString() + "s";
 }
 
-Timer.defaultProps = {onTick: ()=>console.log('tick'), run: false, initialTime: 0, increment: 0.05, className: ""};
+Timer.defaultProps = {onTick: ()=>console.log('tick'), run: false, initialTime: 0, increment: 0.05, className: "", reset: false};
 
 export default Timer;

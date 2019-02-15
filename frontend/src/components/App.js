@@ -22,7 +22,7 @@ class App extends React.Component{
         this.loremIpsums = {small: generateNWords(500), medium: generateNWords(5000), big: generateNWords(50000)};
         this.state = {
             gameState: AppStateEnum.idle,
-            timePassed: 0.0
+            timePassed: 0.0,
         };
     }
 
@@ -41,7 +41,9 @@ class App extends React.Component{
                                     <div className="row align-items-center">
                                         <TargetLabel className="col-lg-6 col-md-6 col-sm-12 text-center"/>
                                         <Timer run={true} 
-                                               onTick={(seconds)=>this.setState({timePassed: seconds})} 
+                                               onTick={(seconds)=>{
+                                                   this.setState({timePassed: seconds});
+                                               }}
                                                increment={0.1} 
                                                className="col-lg-6 col-md-6 col-sm-12 text-center"/>
                                     </div>
